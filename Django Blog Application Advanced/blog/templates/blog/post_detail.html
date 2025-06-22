@@ -1,0 +1,30 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+    <div class="post-entry">
+        <h2>{{ object.title }}</h2>
+        <p class="post-meta">Published on {{ object.date_created|date:"F j, Y" }} | Category: <span class="badge bg-secondary">{{ object.category.name }}</span></p>
+        <p>{{ object.content|linebreaksbr }}</p>
+    </div>
+    <a href="{% url 'post_edit' object.pk %}" class="btn btn-primary">Edit</a>
+    <a href="{% url 'post_delete' object.pk %}" class="btn btn-danger">Delete</a>
+
+    <hr>
+    <h4>Comments</h4>
+    <div class="mb-4">
+        {% for comment in comments %}
+            <div class="border rounded p-2 mb-2 bg-light">
+                <strong>{{ comment.name }}</strong> <span class="text-muted" style="font-size:0.9em;">on {{ comment.date_created|date:"F j, Y H:i" }}</span>
+                <p class="mb-0">{{ comment.text|linebreaksbr }}</p>
+            </div>
+        {% empty %}
+            <p>No comments yet. Be the first to comment!</p>
+        {% endfor %}
+    </div>
+    <h5>Add a comment</h5>
+    <form method="post" class="mb-3">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit" class="btn btn-success">Post Comment</button>
+    </form>
+{% endblock content %}
